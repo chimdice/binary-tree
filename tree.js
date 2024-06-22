@@ -266,6 +266,45 @@ class Tree {
        
     };
 
+    depth (node) {
+        let height = 0;
+        let value = node.value;
+
+        let tempRoot = this.root;
+        let valueFound = false;
+        while (! valueFound) {
+            const nodeValue = tempRoot.value;
+            if (value === nodeValue) {
+                valueFound  = true;
+            } else if (value > nodeValue) {
+                tempRoot = tempRoot.right;
+                height += 1;
+            } else {
+                tempRoot = tempRoot.left;
+                height += 1;
+            };
+        };
+
+        return height;
+    };
+
+    height (node) {
+        let value = node.value;
+
+        let tempRoot = this.find(value);
+
+        function recursion (node) {
+            if (node === null) {
+                return 0
+            } else {
+                return Math.max(recursion(node.left), recursion(node.right)) + 1;
+            };
+        };
+
+        return recursion(tempRoot) - 1;
+            
+    };
+
 };
 
 const tree = new Tree([1, 2, 3, 4,]);
@@ -283,4 +322,4 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     }
   };
 
-console.log(tree.inOrder()) 
+console.log(tree.height(tree.root.right)) 
