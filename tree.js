@@ -138,14 +138,19 @@ class Tree {
         let tempRoot = this.root;
         let valueFound = false;
         while (! valueFound) {
-            const nodeValue = tempRoot.value;
-            if (value === nodeValue) {
-                valueFound  = true;
-            } else if (value > nodeValue) {
-                tempRoot = tempRoot.right;
+            if (tempRoot !== null) {
+                const nodeValue = tempRoot.value;
+                if (value === nodeValue) {
+                    valueFound  = true;
+                } else if (value > nodeValue) {
+                    tempRoot = tempRoot.right;
+                } else {
+                    tempRoot = tempRoot.left
+                };
             } else {
-                tempRoot = tempRoot.left
-            };
+                return null
+            }
+            
         };
 
         return tempRoot;
@@ -289,21 +294,26 @@ class Tree {
     };
 
     height (node) {
-        let value = node.value;
+        if (node !== null) {
+            let value = node.value;
 
-        let tempRoot = this.find(value);
+            let tempRoot = this.find(value);
 
-        function recursion (node) {
-            if (node === null) {
-                return 0
-            } else {
-                return Math.max(recursion(node.left), recursion(node.right)) + 1;
+            function recursion (node) {
+                if (node === null) {
+                    return 0
+                } else {
+                    return Math.max(recursion(node.left), recursion(node.right)) + 1;
+                };
             };
-        };
 
-        return recursion(tempRoot) - 1;
             
+            return recursion(tempRoot) - 1;
+        } else {
+            return null;
+        }
     };
+        
 
 };
 
@@ -322,4 +332,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     }
   };
 
-console.log(tree.height(tree.root.right)) 
+console.log(tree.find(9))
+console.log(tree.height(tree.root.right.right)) 
