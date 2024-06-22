@@ -41,10 +41,88 @@ class Tree {
     };
 
 
-    
+    insert (value) {
+        let tempRoot = this.root;
+        let valueInserted = false;
+
+        while (! valueInserted) {
+            const nodeValue = tempRoot.value;
+
+            if (value > nodeValue) {
+                if (tempRoot.right === null) {
+                    const newNode = new Node();
+                    newNode.value = value;
+                    tempRoot.right = newNode;
+                    valueInserted = true;
+                } else {
+                    tempRoot = tempRoot.right
+                };
+            } else {
+                if (tempRoot.left === null) {
+                    const newNode = new Node();
+                    newNode.value = value;
+                    tempRoot.left = newNode;
+                    valueInserted = true;
+                } else {
+                    tempRoot = tempRoot.left
+                };
+            };
+        };
+    };
+
+    delete (value) {
+        const idx = this.array.indexOf(value);
+
+        if (idx === -1) {
+            return
+        } else {
+
+            let tempRoot = this.root;
+            let valueFound = false;
+            while (! valueFound) {
+                const nodeValue = tempRoot.value;
+                if (value === nodeValue) {
+                    valueFound  = true;
+                } else if (value > nodeValue) {
+                    tempRoot = tempRoot.right;
+                } else {
+                    tempRoot = tempRoot.left
+                };
+                };
+            
+            const rightNode = tempRoot.right;
+            const leftNode = tempRoot.left;
+
+            if ((rightNode === null) && (leftNode === null)) {
+                tempRoot = null;
+            } else if (rightNode === null) {
+                tempRoot = tempRoot.left;
+            } else if (leftNode === null) {
+                tempRoot = tempRoot.right;
+            } else {
+                let nextRight = tempRoot.right;
+                let foundEnd = false;
+
+                while (! foundEnd) {
+                    if (nextRight.left === null) {
+                        nextRight.left = tempRoot.left;
+                        tempRoot = nextRight;
+                        foundEnd = true;
+                    } else {
+                        nextRight = nextRight.left;
+                    };
+                };
+            };
+
+
+        };
+    };
 };
 
-const tree = new Tree([1, 9, 0]);
+const tree = new Tree([1, 9, 0, 8]);
+tree.insert(5)
+tree.insert(19)
+tree.delete(9)
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -58,5 +136,6 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
       prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
     }
   };
+
+console.log(tree.root)
  
-prettyPrint(tree.root)
