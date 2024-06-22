@@ -133,10 +133,57 @@ class Tree {
 
         };
     };
+
+    find (value) {
+        let tempRoot = this.root;
+        let valueFound = false;
+        while (! valueFound) {
+            const nodeValue = tempRoot.value;
+            if (value === nodeValue) {
+                valueFound  = true;
+            } else if (value > nodeValue) {
+                tempRoot = tempRoot.right;
+            } else {
+                tempRoot = tempRoot.left
+            };
+        };
+
+        return tempRoot;
+    };
+
+    levelOrder(callback=null) {
+        let tempRoot = this.root;
+        const queue = [tempRoot];
+        const outArray = [];
+
+        while (queue.length !== 0) {
+            const currentNode = queue[0];
+            if (currentNode.left !== null) {
+                queue.push(currentNode.left);
+            };
+            if (currentNode.right !== null) {
+                queue.push(currentNode.right);
+            };
+        
+            queue.splice(0,1);
+            outArray.push(currentNode)
+        };
+        
+        if (callback === null) {
+            return outArray;
+
+        } else {
+            const callBackOut = []
+            outArray.forEach((node) =>{
+                callBackOut.push(callback(node));
+            });
+
+            return callBackOut;
+        }; 
+    };
 };
 
-const tree = new Tree([1, 2, 3, 4, 5]);
-tree.delete(3)
+const tree = new Tree([1, 2, 3, 4, 5, 6, 7, 8]);
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -151,6 +198,4 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     }
   };
 
-console.log(tree.root)
-prettyPrint(tree.root)
- 
+console.log(tree.levelOrder()) 
