@@ -78,51 +78,65 @@ class Tree {
         } else {
 
             let tempRoot = this.root;
+            let parentNode = null;
             let valueFound = false;
             while (! valueFound) {
                 const nodeValue = tempRoot.value;
                 if (value === nodeValue) {
                     valueFound  = true;
                 } else if (value > nodeValue) {
+                    parentNode = tempRoot;
                     tempRoot = tempRoot.right;
                 } else {
+                    parentNode = tempRoot;
                     tempRoot = tempRoot.left
                 };
-                };
+            };
             
             const rightNode = tempRoot.right;
             const leftNode = tempRoot.left;
 
             if ((rightNode === null) && (leftNode === null)) {
-                tempRoot = null;
-            } else if (rightNode === null) {
-                tempRoot = tempRoot.left;
-            } else if (leftNode === null) {
-                tempRoot = tempRoot.right;
-            } else {
-                let nextRight = tempRoot.right;
-                let foundEnd = false;
-
-                while (! foundEnd) {
-                    if (nextRight.left === null) {
-                        nextRight.left = tempRoot.left;
-                        tempRoot = nextRight;
-                        foundEnd = true;
-                    } else {
-                        nextRight = nextRight.left;
-                    };
+                if (parentNode.left === null) {
+                    parentNode.right = null;
+                } else {
+                    parentNode.left = null;
                 };
-            };
+            } else if (rightNode === null) {
+                tempRoot.value = tempRoot.left.value;
+                tempRoot.left = null;
+            } else if (leftNode === null) {
+                tempRoot.value = tempRoot.right.value;
+                tempRoot.right = null;
+            } else {
+                let minNextRoot = tempRoot.right;
+                let parentMinRoot = null;
+                let foundNullLeft = false;
 
+                while (! foundNullLeft) {
+                    if (minNextRoot.left === null) {
+                        tempRoot.value = minNextRoot.value;
+                        foundNullLeft = true;
+                    } else {
+                        parentMinRoot = minNextRoot;
+                        minNextRoot = minNextRoot.left;
+                    }
+                }
+
+                if (parentMinRoot === null) {
+                    tempRoot.right = null;
+                } else {
+                    parentMinRoot.left = null;
+                }
+
+            }
 
         };
     };
 };
 
-const tree = new Tree([1, 9, 0, 8]);
-tree.insert(5)
-tree.insert(19)
-tree.delete(9)
+const tree = new Tree([1, 2, 3, 4, 5]);
+tree.delete(3)
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -138,4 +152,5 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   };
 
 console.log(tree.root)
+prettyPrint(tree.root)
  
