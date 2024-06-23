@@ -6,7 +6,7 @@ class Node {
     };
 };
 
-class Tree {
+export class Tree {
     constructor (array) {
         this.array = [... new Set(array.sort((a, b) => a - b))];
         
@@ -310,27 +310,51 @@ class Tree {
             
             return recursion(tempRoot) - 1;
         } else {
-            return null;
-        }
+            return 0;
+        };
+    };
+
+    isBalanced () {
+
+        let balanced = true;
+
+        function height (node) {
+            if (node === null) {
+                return 0
+            } else {
+                return Math.max(height(node.left), height(node.right)) + 1;
+            };
+        };
+
+        function recursionBalanced (node) {
+            if (node === null) {
+                return 0
+            } else {
+                let heightLeft = height(node.left);
+                let heightRight = height(node.right);
+                const heightDifference = Math.abs(heightLeft-heightRight);
+
+                if (heightDifference < 2) {
+                    recursionBalanced(node.left);
+                    recursionBalanced(node.right);
+                } else {
+                    balanced = false;
+                };
+            };
+        };
+
+        recursionBalanced(this.root);
+        return balanced;
+    };
+
+    reBalance () {
+        const balanced = this.isBalanced()
+
+        if (! balanced) {
+            const newArray = this.inOrder((node) => node.value);
+            this.root = this.buildTree(newArray);
+        };
     };
         
 
 };
-
-const tree = new Tree([1, 2, 3, 4,]);
-
-const prettyPrint = (node, prefix = "", isLeft = true) => {
-    if (node === null) {
-      return;
-    }
-    if (node.right !== null) {
-      prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-    }
-    console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
-    if (node.left !== null) {
-      prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
-    }
-  };
-
-console.log(tree.find(9))
-console.log(tree.height(tree.root.right.right)) 
